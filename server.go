@@ -7,13 +7,13 @@ import (
 
 type InteractionServer struct {
 	rawSrv  *fiber.App
-	handler func()
+	handler func(*fiber.Ctx)
 }
 
 func NewInteractionServer() InteractionServer {
 	srv := InteractionServer{
 		rawSrv:  fiber.New(),
-		handler: func() {},
+		handler: func(c *fiber.Ctx) {},
 	}
 
 	srv.rawSrv.Post("/", func(c *fiber.Ctx) error {
@@ -34,6 +34,8 @@ func NewInteractionServer() InteractionServer {
 
 			return c.SendString(rep)
 		}
+
+		srv.handler(c)
 
 		return nil
 	})
