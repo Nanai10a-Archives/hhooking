@@ -7,10 +7,10 @@ import (
 
 type InteractionServer struct {
 	rawSrv   *fiber.App
-	handlers []Handler
+	handlers []StandaloneInteractionHandler
 }
 
-type Handler func(*fiber.Ctx)
+type StandaloneInteractionHandler func(*fiber.Ctx)
 
 func NewInteractionServer() *InteractionServer {
 	srv := InteractionServer{
