@@ -12,7 +12,7 @@ type InteractionServer struct {
 
 type Handler func(*fiber.Ctx)
 
-func NewInteractionServer() InteractionServer {
+func NewInteractionServer() *InteractionServer {
 	srv := InteractionServer{
 		rawSrv: fiber.New(),
 	}
@@ -43,7 +43,7 @@ func NewInteractionServer() InteractionServer {
 		return nil
 	})
 
-	return srv
+	return &srv
 }
 
 func (s *InteractionServer) RegisterHandlers(hs ...Handler) {
