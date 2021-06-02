@@ -6,14 +6,15 @@ import (
 )
 
 type InteractionServer struct {
-	rawSrv  *fiber.App
-	handler func(*fiber.Ctx)
+	rawSrv   *fiber.App
+	handlers []Handler
 }
+
+type Handler func(*fiber.Ctx)
 
 func NewInteractionServer() InteractionServer {
 	srv := InteractionServer{
-		rawSrv:  fiber.New(),
-		handler: func(c *fiber.Ctx) {},
+		rawSrv: fiber.New(),
 	}
 
 	srv.rawSrv.Post("/", func(c *fiber.Ctx) error {
@@ -35,10 +36,16 @@ func NewInteractionServer() InteractionServer {
 			return c.SendString(rep)
 		}
 
-		srv.handler(c)
+		for _, h := range srv.handlers {
+			h(c)
+		}
 
 		return nil
 	})
 
 	return srv
+}
+
+func (s *InteractionServer) RegisterHandlers(hs ...Handler) {
+	s.handlers = append(s.handlers, hs...)
 }
