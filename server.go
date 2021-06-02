@@ -23,9 +23,9 @@ func NewInteractionServer() InteractionServer {
 		if body.Type == 1 {
 			rep, err := jsonitor.ConfigCompatibleWithStandardLibrary.MarshalToString(
 				struct {
-					Type InteractionType `json:"type"`
+					Type InteractionCallbackType `json:"type"`
 				}{
-					Type: ItPing,
+					Type: IctPong,
 				},
 			)
 			if err != nil {
