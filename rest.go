@@ -137,8 +137,11 @@ func CreateInteractionResponse(appId SnowFlake, authToken string, iaId SnowFlake
 type Message struct {}
 
 func GetOriginalInteractionResponse(appId SnowFlake, authToken string, iaToken string) Message {
-    // TODO
-    panic("not impl")
+    reqPath := path.Join("webhooks", fmt.Sprintf("%d", appId), fmt.Sprint("%d", iaToken), "messages", "@original")
+    var v Message
+    sendRequest(reqPath, "GET", nil, authToken, &v)
+
+    return v
 }
 
 type WebhookMessagePatchData struct {}
