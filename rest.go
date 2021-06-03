@@ -70,6 +70,11 @@ func EditGlobalApplicationCommand(appId SnowFlake, token string, cmdId SnowFlake
     return v
 }
 
+func DeleteGlobalApplicationCommand(appId SnowFlake, token string, cmdId SnowFlake) {
+    reqPath := path.Join("applications", fmt.Sprintf("%d", appId), "commands", fmt.Sprint("%d", cmdId))
+    sendRequest(reqPath, "DELETE", nil, token, nil)
+}
+
 // FIXME: error返しません?
 func sendRequest(targetPath string, method string, content []byte, token string, rep interface {}) {
     url, err := url.Parse(BaseAPIUrl)
