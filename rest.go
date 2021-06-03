@@ -163,6 +163,18 @@ func DeleteOriginalInteractionResponse(appId SnowFlake, authToken string, iaToke
     sendRequest(reqPath, "DELETE", nil, authToken, nil)
 }
 
+type WebhookMessagePostData struct {}
+
+func CreateFollowupMessage(appId SnowFlake, authToken string, iaToken string, data WebhookMessagePostData) {
+    reqPath := path.Join("webhooks", fmt.Sprintf("%d", appId), fmt.Sprintf("%d", iaToken))
+    content, err := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(data)
+    if err != nil {
+        // TODO: err handling
+    }
+
+    sendRequest(reqPath, "POST", content, authToken, nil)
+}
+
 // FIXME: error返しません?
 func sendRequest(targetPath string, method string, content []byte, authToken string, rep interface{}) {
 	url, err := url.Parse(BaseAPIUrl)
