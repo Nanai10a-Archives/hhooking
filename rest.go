@@ -15,8 +15,15 @@ const (
 	BaseAPIUrl = "https://discord.com/api/v8/"
 )
 
-func GetGlobalApplicationCommands(appId SnowFlake, token string) []ApplicationCommand {
-    reqPath := path.Join("applications", fmt.Sprintf("%d", appId), "commands")
+func GetApplicationCommands(appId SnowFlake, token string, guildId *SnowFlake) []ApplicationCommand {
+    var reqPath string
+    switch guildId {
+    case nil:
+        reqPath = path.Join("applications", fmt.Sprintf("%d", appId), "commands")
+    default:
+        reqPath = path.Join("applications", fmt.Sprintf("%d", appId), "guilds", fmt.Sprintf("%d", *guildId), "commands")
+    }
+
 	var v []ApplicationCommand
     sendRequest(reqPath, "GET", nil, token, &v)
 
@@ -30,8 +37,15 @@ type ApplicationCommandPostData struct {
     DefaultPermisson bool `json:"default_permisson,omitempty"`
 }
 
-func CreateGlobalApplicationCommands(appId SnowFlake, token string, data ApplicationCommandPostData) ApplicationCommand {
-    reqPath := path.Join("applications", fmt.Sprintf("%d", appId), "commands")
+func CreateApplicationCommands(appId SnowFlake, token string, guildId *SnowFlake, data ApplicationCommandPostData) ApplicationCommand {
+    var reqPath string
+    switch guildId {
+    case nil:
+        reqPath = path.Join("applications", fmt.Sprintf("%d", appId), "commands")
+    default:
+        reqPath = path.Join("applications", fmt.Sprintf("%d", appId), "guilds", fmt.Sprintf("%d", *guildId), "commands")
+    }
+
     var v ApplicationCommand
     content, err := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(data)
     if err != nil {
@@ -42,8 +56,15 @@ func CreateGlobalApplicationCommands(appId SnowFlake, token string, data Applica
     return v
 }
 
-func GetGlobalApplicationCommand(appId SnowFlake, token string, cmdId SnowFlake) ApplicationCommand {
-    reqPath := path.Join("applications", fmt.Sprintf("%d", appId), "commands", fmt.Sprintf("%d", cmdId))
+func GetApplicationCommand(appId SnowFlake, token string, cmdId SnowFlake, guildId *SnowFlake) ApplicationCommand {
+    var reqPath string
+    switch guildId {
+    case nil:
+        reqPath = path.Join("applications", fmt.Sprintf("%d", appId), "commands", fmt.Sprintf("%d", cmdId))
+    default:
+        reqPath = path.Join("applications", fmt.Sprintf("%d", appId), "guilds", fmt.Sprintf("%d", *guildId), "commands", fmt.Sprintf("%d", cmdId))
+    }
+
     var v ApplicationCommand
     sendRequest(reqPath, "GET", nil, token, &v)
 
@@ -58,8 +79,15 @@ type ApplicationCommandPatchData struct {
     DefaultPermisson bool `json:"default_permisson,omitempty"`
 }
 
-func EditGlobalApplicationCommand(appId SnowFlake, token string, cmdId SnowFlake, data ApplicationCommandPatchData) ApplicationCommand {
-    reqPath := path.Join("applications", fmt.Sprintf("%d", appId), "commands", fmt.Sprintf("%d", cmdId))
+func EditApplicationCommand(appId SnowFlake, token string, cmdId SnowFlake, guildId *SnowFlake, data ApplicationCommandPatchData) ApplicationCommand {
+    var reqPath string
+    switch guildId {
+    case nil:
+        reqPath = path.Join("applications", fmt.Sprintf("%d", appId), "commands", fmt.Sprintf("%d", cmdId))
+    default:
+        reqPath = path.Join("applications", fmt.Sprintf("%d", appId), "guilds", fmt.Sprintf("%d", *guildId), "commands", fmt.Sprintf("%d", cmdId))
+    }
+
     var v ApplicationCommand
     content, err := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(data)
     if err != nil {
@@ -70,13 +98,27 @@ func EditGlobalApplicationCommand(appId SnowFlake, token string, cmdId SnowFlake
     return v
 }
 
-func DeleteGlobalApplicationCommand(appId SnowFlake, token string, cmdId SnowFlake) {
-    reqPath := path.Join("applications", fmt.Sprintf("%d", appId), "commands", fmt.Sprint("%d", cmdId))
+func DeleteApplicationCommand(appId SnowFlake, token string, cmdId SnowFlake, guildId *SnowFlake) {
+    var reqPath string
+    switch guildId {
+    case nil:
+        reqPath = path.Join("applications", fmt.Sprintf("%d", appId), "commands", fmt.Sprintf("%d", cmdId))
+    default:
+        reqPath = path.Join("applications", fmt.Sprintf("%d", appId), "guilds", fmt.Sprintf("%d", *guildId), "commands", fmt.Sprintf("%d", cmdId))
+    }
+
     sendRequest(reqPath, "DELETE", nil, token, nil)
 }
 
-func BulkOverwriteGlobalApplicationCommands(appId SnowFlake, token string, data []ApplicationCommandPostData) []ApplicationCommand {
-    reqPath := path.Join("applications", fmt.Sprintf("%d", appId), "commands")
+func BulkOverwriteApplicationCommands(appId SnowFlake, token string, guildId *SnowFlake, data []ApplicationCommandPostData) []ApplicationCommand {
+   var reqPath string
+    switch guildId {
+    case nil:
+        reqPath = path.Join("applications", fmt.Sprintf("%d", appId), "commands")
+    default:
+        reqPath = path.Join("applications", fmt.Sprintf("%d", appId), "guilds", fmt.Sprintf("%d", *guildId), "commands")
+    }
+
     var v []ApplicationCommand
     content, err := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(data)
     if err != nil {
