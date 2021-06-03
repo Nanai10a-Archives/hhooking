@@ -134,6 +134,25 @@ func CreateInteractionResponse(appId SnowFlake, authToken string, iaId SnowFlake
     sendRequest(reqPath, "POST", nil, authToken, nil)
 }
 
+type Message struct {}
+
+func GetOriginalInteractionResponse(appId SnowFlake, authToken string, iaToken string) Message {
+    // TODO
+    panic("not impl")
+}
+
+type WebhookMessagePatchData struct {}
+
+func EditOriginalInteractionResponse(appId SnowFlake, authToken string, iaToken string, data WebhookMessagePatchData) Message {
+    // TODO
+    panic("not impl")
+}
+
+func DeleteOriginalInteractionResponse(appId SnowFlake, authToken string, iaToken string) {
+    // TODO
+    panic("not impl")
+}
+
 // FIXME: error返しません?
 func sendRequest(targetPath string, method string, content []byte, authToken string, rep interface{}) {
 	url, err := url.Parse(BaseAPIUrl)
