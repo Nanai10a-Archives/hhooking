@@ -14,7 +14,7 @@ const (
 	BaseAPIUrl = "https://discord.com/api/v8/"
 )
 
-func GetApplicationCommands(id SnowFlake, token string) []ApplicationCommand {
+func GetGlobalApplicationCommands(id SnowFlake, token string) []ApplicationCommand {
 	url, err := url.Parse(BaseAPIUrl)
 	if err != nil {
 		// TODO: err handling
