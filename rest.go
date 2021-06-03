@@ -16,36 +16,9 @@ const (
 )
 
 func GetGlobalApplicationCommands(id SnowFlake, token string) []ApplicationCommand {
-	url, err := url.Parse(BaseAPIUrl)
-	if err != nil {
-		// TODO: err handling
-	}
-
-	url.Path = path.Join(url.Path, "applications", fmt.Sprintf("%d", id), "commands")
-
-	req, err := http.NewRequest("GET", url.String(), nil)
-	if err != nil {
-		// TODO: err handling
-	}
-
-	req.Header.Add("Authorization", fmt.Sprintf("Bot %s", token))
-
-	client := new(http.Client)
-	res, err := client.Do(req)
-	if err != nil {
-		// TODO: err handling
-	}
-
+    reqPath := path.Join("applications", fmt.Sprintf("%d", id), "commands")
 	var v []ApplicationCommand
-	bytes, err := io.ReadAll(res.Body)
-	if err != nil {
-		// TODO: err handling
-	}
-
-	err = jsoniter.ConfigCompatibleWithStandardLibrary.Unmarshal(bytes, &v)
-	if err != nil {
-		// TODO: err handling
-	}
+    sendRequest(reqPath, "GET", nil, fmt.Sprintf("Bot %s", token), &v)
 
 	return v
 }
@@ -58,7 +31,14 @@ func sendRequest(targetPath string, method string, content []byte, token string,
 
     url.Path = path.Join(url.Path, targetPath)
 
-    buf := bytes.NewBuffer(content)
+    var buf *bytes.Buffer
+    switch content {
+    case nil:
+        buf = nil
+    default:
+        buf = bytes.NewBuffer(content)
+    }
+
     req, err := http.NewRequest(method, url.String(), buf)
     if err != nil {
         // TODO: err handling
