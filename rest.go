@@ -15,8 +15,8 @@ const (
 	BaseAPIUrl = "https://discord.com/api/v8/"
 )
 
-func GetGlobalApplicationCommands(id SnowFlake, token string) []ApplicationCommand {
-    reqPath := path.Join("applications", fmt.Sprintf("%d", id), "commands")
+func GetGlobalApplicationCommands(appId SnowFlake, token string) []ApplicationCommand {
+    reqPath := path.Join("applications", fmt.Sprintf("%d", appId), "commands")
 	var v []ApplicationCommand
     sendRequest(reqPath, "GET", nil, token, &v)
 
@@ -30,14 +30,22 @@ type ApplicationCommandPostData struct {
     DefaultPermisson bool `json:"default_permisson,omitempty"`
 }
 
-func CreateGlobalApplicationCommands(id SnowFlake, token string, data ApplicationCommandPostData) ApplicationCommand {
-    reqPath := path.Join("applications", fmt.Sprintf("%d", id), "commands")
+func CreateGlobalApplicationCommands(appId SnowFlake, token string, data ApplicationCommandPostData) ApplicationCommand {
+    reqPath := path.Join("applications", fmt.Sprintf("%d", appId), "commands")
     var v ApplicationCommand
     content, err := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(data)
     if err != nil {
         // TODO: err handling
     }
     sendRequest(reqPath, "POST", content, token, &v)
+
+    return v
+}
+
+func GetGlobalApplicationCommand(appId SnowFlake, token string, cmdId SnowFlake) ApplicationCommand {
+    reqPath := path.Join("applications", fmt.Sprintf("%d", appId), "commands", fmt.Sprintf("%d", cmdId))
+    var v ApplicationCommand
+    sendRequest(reqPath, "GET", nil, token, &v)
 
     return v
 }
