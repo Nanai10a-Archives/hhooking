@@ -110,6 +110,7 @@ func sendRequest(targetPath string, method string, content []byte, token string,
         // TODO: err handling
     }
 
+    // FIXME: pointerがnilだった場合, これは大丈夫?
     err = jsoniter.ConfigCompatibleWithStandardLibrary.Unmarshal(resBytes, rep)
     if err != nil {
         // TODO: err handling
