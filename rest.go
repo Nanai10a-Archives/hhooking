@@ -75,6 +75,18 @@ func DeleteGlobalApplicationCommand(appId SnowFlake, token string, cmdId SnowFla
     sendRequest(reqPath, "DELETE", nil, token, nil)
 }
 
+func BulkOverwriteGlobalApplicationCommands(appId SnowFlake, token string, data []ApplicationCommandPostData) []ApplicationCommand {
+    reqPath := path.Join("applications", fmt.Sprintf("%d", appId), "commands")
+    var v []ApplicationCommand
+    content, err := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(data)
+    if err != nil {
+        // TODO: err handling
+    }
+    sendRequest(reqPath, "PUT", content, token, v)
+
+    return v
+}
+
 // FIXME: error返しません?
 func sendRequest(targetPath string, method string, content []byte, token string, rep interface {}) {
     url, err := url.Parse(BaseAPIUrl)
