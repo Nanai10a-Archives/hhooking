@@ -147,8 +147,15 @@ func GetOriginalInteractionResponse(appId SnowFlake, authToken string, iaToken s
 type WebhookMessagePatchData struct {}
 
 func EditOriginalInteractionResponse(appId SnowFlake, authToken string, iaToken string, data WebhookMessagePatchData) Message {
-    // TODO
-    panic("not impl")
+    reqPath := path.Join("webhooks", fmt.Sprintf("%d", appId), fmt.Sprintf("%d", iaToken), "messages", "@original")
+    var v Message
+    content, err := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(data)
+    if err != nil {
+        // TODO: err handling
+    }
+    sendRequest(reqPath, "PATCH", content, authToken, &v)
+
+    return v
 }
 
 func DeleteOriginalInteractionResponse(appId SnowFlake, authToken string, iaToken string) {
