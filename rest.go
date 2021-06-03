@@ -159,8 +159,8 @@ func EditOriginalInteractionResponse(appId SnowFlake, authToken string, iaToken 
 }
 
 func DeleteOriginalInteractionResponse(appId SnowFlake, authToken string, iaToken string) {
-    // TODO
-    panic("not impl")
+    reqPath := path.Join("webhooks", fmt.Sprintf("%d", appId), fmt.Sprintf("%d", iaToken), "messages", "@original")
+    sendRequest(reqPath, "DELETE", nil, authToken, nil)
 }
 
 // FIXME: error返しません?
