@@ -15,7 +15,7 @@ const (
 	BaseAPIUrl = "https://discord.com/api/v8/"
 )
 
-func GetApplicationCommands(appId SnowFlake, token string, guildId *SnowFlake) []ApplicationCommand {
+func GetApplicationCommands(appId SnowFlake, authToken string, guildId *SnowFlake) []ApplicationCommand {
 	var reqPath string
 	switch guildId {
 	case nil:
@@ -25,7 +25,7 @@ func GetApplicationCommands(appId SnowFlake, token string, guildId *SnowFlake) [
 	}
 
 	var v []ApplicationCommand
-	sendRequest(reqPath, "GET", nil, token, &v)
+	sendRequest(reqPath, "GET", nil, authToken, &v)
 
 	return v
 }
@@ -37,7 +37,7 @@ type ApplicationCommandPostData struct {
 	DefaultPermisson bool                       `json:"default_permisson,omitempty"`
 }
 
-func CreateApplicationCommands(appId SnowFlake, token string, guildId *SnowFlake, data ApplicationCommandPostData) ApplicationCommand {
+func CreateApplicationCommands(appId SnowFlake, authToken string, guildId *SnowFlake, data ApplicationCommandPostData) ApplicationCommand {
 	var reqPath string
 	switch guildId {
 	case nil:
@@ -51,12 +51,12 @@ func CreateApplicationCommands(appId SnowFlake, token string, guildId *SnowFlake
 	if err != nil {
 		// TODO: err handling
 	}
-	sendRequest(reqPath, "POST", content, token, &v)
+	sendRequest(reqPath, "POST", content, authToken, &v)
 
 	return v
 }
 
-func GetApplicationCommand(appId SnowFlake, token string, cmdId SnowFlake, guildId *SnowFlake) ApplicationCommand {
+func GetApplicationCommand(appId SnowFlake, authToken string, cmdId SnowFlake, guildId *SnowFlake) ApplicationCommand {
 	var reqPath string
 	switch guildId {
 	case nil:
@@ -66,7 +66,7 @@ func GetApplicationCommand(appId SnowFlake, token string, cmdId SnowFlake, guild
 	}
 
 	var v ApplicationCommand
-	sendRequest(reqPath, "GET", nil, token, &v)
+	sendRequest(reqPath, "GET", nil, authToken, &v)
 
 	return v
 }
@@ -79,7 +79,7 @@ type ApplicationCommandPatchData struct {
 	DefaultPermisson bool                       `json:"default_permisson,omitempty"`
 }
 
-func EditApplicationCommand(appId SnowFlake, token string, cmdId SnowFlake, guildId *SnowFlake, data ApplicationCommandPatchData) ApplicationCommand {
+func EditApplicationCommand(appId SnowFlake, authToken string, cmdId SnowFlake, guildId *SnowFlake, data ApplicationCommandPatchData) ApplicationCommand {
 	var reqPath string
 	switch guildId {
 	case nil:
@@ -93,12 +93,12 @@ func EditApplicationCommand(appId SnowFlake, token string, cmdId SnowFlake, guil
 	if err != nil {
 		// TODO: err handling
 	}
-	sendRequest(reqPath, "PATCH", content, token, &v)
+	sendRequest(reqPath, "PATCH", content, authToken, &v)
 
 	return v
 }
 
-func DeleteApplicationCommand(appId SnowFlake, token string, cmdId SnowFlake, guildId *SnowFlake) {
+func DeleteApplicationCommand(appId SnowFlake, authToken string, cmdId SnowFlake, guildId *SnowFlake) {
 	var reqPath string
 	switch guildId {
 	case nil:
@@ -107,10 +107,10 @@ func DeleteApplicationCommand(appId SnowFlake, token string, cmdId SnowFlake, gu
 		reqPath = path.Join("applications", fmt.Sprintf("%d", appId), "guilds", fmt.Sprintf("%d", *guildId), "commands", fmt.Sprintf("%d", cmdId))
 	}
 
-	sendRequest(reqPath, "DELETE", nil, token, nil)
+	sendRequest(reqPath, "DELETE", nil, authToken, nil)
 }
 
-func BulkOverwriteApplicationCommands(appId SnowFlake, token string, guildId *SnowFlake, data []ApplicationCommandPostData) []ApplicationCommand {
+func BulkOverwriteApplicationCommands(appId SnowFlake, authToken string, guildId *SnowFlake, data []ApplicationCommandPostData) []ApplicationCommand {
 	var reqPath string
 	switch guildId {
 	case nil:
@@ -124,13 +124,18 @@ func BulkOverwriteApplicationCommands(appId SnowFlake, token string, guildId *Sn
 	if err != nil {
 		// TODO: err handling
 	}
-	sendRequest(reqPath, "PUT", content, token, v)
+	sendRequest(reqPath, "PUT", content, authToken, v)
 
 	return v
 }
 
+func CreateInteractionResponse(appId SnowFlake, authToken string, iaId SnowFlake, iaToken string, res InteractionReponse) {
+    reqPath := path.Join("interactions", fmt.Sprintf("%d", iaId), fmt.Sprintf("%d", iaToken), "callback")
+    sendRequest(reqPath, "POST", nil, authToken, nil)
+}
+
 // FIXME: error返しません?
-func sendRequest(targetPath string, method string, content []byte, token string, rep interface{}) {
+func sendRequest(targetPath string, method string, content []byte, authToken string, rep interface{}) {
 	url, err := url.Parse(BaseAPIUrl)
 	if err != nil {
 		// TODO: err handling
@@ -151,7 +156,7 @@ func sendRequest(targetPath string, method string, content []byte, token string,
 		// TODO: err handling
 	}
 
-	req.Header.Add("Authorization", token)
+	req.Header.Add("Authorization", authToken)
 
 	client := new(http.Client)
 	res, err := client.Do(req)

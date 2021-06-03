@@ -4,7 +4,7 @@ type SnowFlake uint64
 
 // TODO: 汎用structの未定義によりOmitされます
 
-type InteractionReponce struct {
+type InteractionReponse struct {
 	Type InteractionCallbackType                    `json:"type"`
 	Data *InteractionApplicationCommandCallbackData `json:"data"`
 }
