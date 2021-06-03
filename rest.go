@@ -18,9 +18,28 @@ const (
 func GetGlobalApplicationCommands(id SnowFlake, token string) []ApplicationCommand {
     reqPath := path.Join("applications", fmt.Sprintf("%d", id), "commands")
 	var v []ApplicationCommand
-    sendRequest(reqPath, "GET", nil, fmt.Sprintf("Bot %s", token), &v)
+    sendRequest(reqPath, "GET", nil, token, &v)
 
 	return v
+}
+
+type ApplicationCommandPostData struct {
+    Name string `json:"name"`
+    Description string `json:"description"`
+    Options []ApplicationCommandOption `json:"options,omitempty"`
+    DefaultPermisson bool `json:"default_permisson,omitempty"`
+}
+
+func CreateGlobalApplicationCommands(id SnowFlake, token string, data ApplicationCommandPostData) ApplicationCommand {
+    reqPath := path.Join("applications", fmt.Sprintf("%d", id), "commands")
+    var v ApplicationCommand
+    content, err := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(data)
+    if err != nil {
+        // TODO: err handling
+    }
+    sendRequest(reqPath, "POST", content, token, &v)
+
+    return v
 }
 
 func sendRequest(targetPath string, method string, content []byte, token string, rep interface {}) {
