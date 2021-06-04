@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	jsoniter "github.com/json-iterator/go"
-	jsonitor "github.com/json-iterator/go"
 )
 
 type GCFInteractionFunction func(http.ResponseWriter, *http.Request)
@@ -33,10 +32,10 @@ func CreateInteractionHandler(hexEncodedKey string, h GCFInteractionHandler) GCF
 			// TODO: err handling
 		}
 
-		jsonitor.ConfigCompatibleWithStandardLibrary.Unmarshal(bytes, &body)
+		jsoniter.ConfigCompatibleWithStandardLibrary.Unmarshal(bytes, &body)
 
 		if body.Type == ItPing {
-			rep, err := jsonitor.ConfigCompatibleWithStandardLibrary.Marshal(
+			rep, err := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(
 				InteractionReponse{
 					Type: IctPong,
 				},
