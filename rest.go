@@ -146,8 +146,16 @@ func GetOriginalInteractionResponse(appId SnowFlake, authToken string, iaToken s
 
 type WebhookMessagePatchData struct {}
 
-func EditOriginalInteractionResponse(appId SnowFlake, authToken string, iaToken string, data WebhookMessagePatchData) Message {
-    reqPath := path.Join("webhooks", fmt.Sprintf("%d", appId), fmt.Sprintf("%d", iaToken), "messages", "@original")
+// FIXME: msgIdを使用すると"Edit Followup Message"なので命名に問題あり
+func EditOriginalInteractionResponse(appId SnowFlake, authToken string, iaToken string, msgId *SnowFlake, data WebhookMessagePatchData) Message {
+    var reqPath string
+    switch msgId {
+    case nil:
+        reqPath = path.Join("webhooks", fmt.Sprintf("%d", appId), fmt.Sprintf("%d", iaToken), "messages", "@original")
+    default:
+        reqPath = path.Join("webhooks", fmt.Sprintf("%d", appId), fmt.Sprintf("%d", iaToken), "messages", fmt.Sprintf("%d", *msgId))
+    }
+
     var v Message
     content, err := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(data)
     if err != nil {
@@ -158,8 +166,16 @@ func EditOriginalInteractionResponse(appId SnowFlake, authToken string, iaToken 
     return v
 }
 
-func DeleteOriginalInteractionResponse(appId SnowFlake, authToken string, iaToken string) {
-    reqPath := path.Join("webhooks", fmt.Sprintf("%d", appId), fmt.Sprintf("%d", iaToken), "messages", "@original")
+// FIXME: msgIdを使用すると"Delete Followup Message"なので命名に問題あり
+func DeleteOriginalInteractionResponse(appId SnowFlake, authToken string, iaToken string, msgId *SnowFlake) {
+    var reqPath string
+    switch msgId {
+    case nil:
+        reqPath = path.Join("webhooks", fmt.Sprintf("%d", appId), fmt.Sprintf("%d", iaToken), "messages", "@original")
+    default:
+        reqPath = path.Join("webhooks", fmt.Sprintf("%d", appId), fmt.Sprintf("%d", iaToken), "messages", fmt.Sprintf("%d", *msgId))
+    }
+
     sendRequest(reqPath, "DELETE", nil, authToken, nil)
 }
 
