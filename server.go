@@ -46,6 +46,6 @@ func NewInteractionServer() *InteractionServer {
 	return &srv
 }
 
-func (s *InteractionServer) RegisterHandlers(hs ...Handler) {
+func (s *InteractionServer) RegisterHandlers(hs ...StandaloneInteractionHandler) {
 	s.handlers = append(s.handlers, hs...)
 }
