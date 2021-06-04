@@ -6,7 +6,7 @@ type SnowFlake uint64
 
 type InteractionReponse struct {
 	Type InteractionCallbackType                    `json:"type"`
-	Data *InteractionApplicationCommandCallbackData `json:"data"`
+	Data *InteractionApplicationCommandCallbackData `json:"data,omitempty"`
 }
 
 type InteractionCallbackType int
@@ -21,9 +21,9 @@ const (
 
 type InteractionApplicationCommandCallbackData struct {
 	Tts     bool    `json:"tts"`
-	Content *string `json:"content"`
-	// Embeds *[]Embed `json:"embeds"`
-	AllowedMentions *AllowedMention `json:"allowed_mentions"`
+	Content *string `json:"content,omitempty"`
+	// Embeds *[]Embed `json:"embeds,omitempty"`
+	AllowedMentions *AllowedMention `json:"allowed_mentions,omitempty"`
 	Flags           int             `json:"flags"` // set 64
 }
 
@@ -41,17 +41,17 @@ type ApplicationCommand struct {
 	ApplicationId    SnowFlake                   `json:"application_id"`
 	Name             string                      `json:"name"`
 	Description      string                      `json:"description"`
-	Options          *[]ApplicationCommandOption `json:"options"`
-	DefaultPermisson *bool                       `json:"default_permission"` // default: true
+	Options          *[]ApplicationCommandOption `json:"options,omitempty"`
+	DefaultPermisson *bool                       `json:"default_permission,omitempty"` // default: true
 }
 
 type ApplicationCommandOption struct {
 	Type        ApplicationCommandOptionType      `json:"type"`
 	Name        string                            `json:"name"`
 	Description string                            `json:"description"`
-	Required    *bool                             `json:"required"`
-	Choices     *[]ApplicationCommandOptionChoice `json:"choices"`
-	Options     *[]ApplicationCommandOption       `json:"options"`
+	Required    *bool                             `json:"required,omitempty"`
+	Choices     *[]ApplicationCommandOptionChoice `json:"choices,omitempty"`
+	Options     *[]ApplicationCommandOption       `json:"options,omitempty"`
 }
 
 type ApplicationCommandOptionType int
@@ -99,14 +99,14 @@ type Interaction struct {
 	Id            SnowFlake                          `json:"id"`
 	ApplicationId SnowFlake                          `json:"application_id"`
 	Type          InteractionType                    `json:"type"`
-	Data          *ApplicationCommandInteractionData `json:"data"`
+	Data          *ApplicationCommandInteractionData `json:"data,omitempty"`
 	GuildId       SnowFlake                          `json:"guild_id"`
 	ChannelId     SnowFlake                          `json:"channel_id"`
-	// Member *Member `json:"member"`
-	// User *User `json:"user"`
+	// Member *Member `json:"member,omitempty"`
+	// User *User `json:"user,omitempty"`
 	Token   string `json:"token"`
 	Version int    `json:"version"`
-	// Message *Message `json:"message"`
+	// Message *Message `json:"message,omitempty"`
 }
 
 type InteractionType int
@@ -121,24 +121,24 @@ const (
 type ApplicationCommandInteractionData struct {
 	Id            SnowFlake                                  `json:"id"`
 	Name          string                                     `json:"name"`
-	Resolved      *ApplicationCommandInteractionDataResolved `json:"resolved"`
-	Options       *[]ApplicationCommandInteractionDataOption `json:"options"`
+	Resolved      *ApplicationCommandInteractionDataResolved `json:"resolved,omitempty"`
+	Options       *[]ApplicationCommandInteractionDataOption `json:"options,omitempty"`
 	CustomId      string                                     `json:"custom_id"`
 	ComponentType int                                        `json:"component_type"`
 }
 
 type ApplicationCommandInteractionDataResolved struct {
-	// Users *map[SnowFlake]User `json:"users"`
-	// Members *map[SnowFlake]GuildMember `json:"members"`
-	// Roles *map[SnowFlake]Role `json:"roles"`
-	// Channels *map[SnowFlake]GuildChannel `json:"channels"`
+	// Users *map[SnowFlake]User `json:"users,omitempty"`
+	// Members *map[SnowFlake]GuildMember `json:"members,omitempty"`
+	// Roles *map[SnowFlake]Role `json:"roles,omitempty"`
+	// Channels *map[SnowFlake]GuildChannel `json:"channels,omitempty"`
 }
 
 type ApplicationCommandInteractionDataOption struct {
 	Name    string                                     `json:"name"`
 	Type    ApplicationCommandOptionType               `json:"type"`
-	Value   *OptionType                                `json:"value"`
-	Options *[]ApplicationCommandInteractionDataOption `json:"options"`
+	Value   *OptionType                                `json:"value,omitempty"`
+	Options *[]ApplicationCommandInteractionDataOption `json:"options,omitempty"`
 }
 
 type OptionType string // FIXME: この型わかんない
