@@ -3,7 +3,6 @@ package hhooking
 import (
 	"bytes"
 	"fmt"
-	"io"
 	"net/http"
 	"net/url"
 	"path"

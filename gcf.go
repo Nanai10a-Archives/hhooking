@@ -3,7 +3,6 @@ package hhooking
 import (
 	"crypto/ed25519"
 	"encoding/hex"
-	"io"
 	"net/http"
 
 	jsoniter "github.com/json-iterator/go"
