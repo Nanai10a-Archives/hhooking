@@ -26,13 +26,25 @@ func CreateInteractionHandler(hexEncodedKey string, h GCFInteractionHandler) GCF
 		}
 
 		var body Interaction
-		bytes, err := io.ReadAll(r.Body)
+
+		buf := make([]byte, 0)
 		defer r.Body.Close()
-		if err != nil {
-			// TODO: err handling
+		for {
+			size := 64
+			v := make([]byte, size)
+			resSize, err := r.Body.Read(v)
+			if err != nil {
+				// TODO: err handling
+			}
+
+			buf = append(buf, v...)
+
+			if resSize < size {
+				break
+			}
 		}
 
-		jsoniter.ConfigCompatibleWithStandardLibrary.Unmarshal(bytes, &body)
+		jsoniter.ConfigCompatibleWithStandardLibrary.Unmarshal(buf, &body)
 
 		if body.Type == ItPing {
 			rep, err := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(

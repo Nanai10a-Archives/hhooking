@@ -221,13 +221,24 @@ func sendRequest(targetPath string, method string, content []byte, authToken str
 		// TODO: err handling
 	}
 
-	resBytes, err := io.ReadAll(res.Body)
-	if err != nil {
-		// TODO: err handling
+	resBuf := make([]byte, 0)
+	for {
+		size := 64
+		v := make([]byte, size)
+		resSize, err := res.Body.Read(v)
+		if err != nil {
+			// TODO: err handling
+		}
+
+		resBuf = append(resBuf, v...)
+
+		if resSize < size {
+			break
+		}
 	}
 
 	// FIXME: pointerがnilだった場合, これは大丈夫?
-	err = jsoniter.ConfigCompatibleWithStandardLibrary.Unmarshal(resBytes, rep)
+	err = jsoniter.ConfigCompatibleWithStandardLibrary.Unmarshal(resBuf, rep)
 	if err != nil {
 		// TODO: err handling
 	}
