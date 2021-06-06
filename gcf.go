@@ -59,6 +59,9 @@ func CreateInteractionHandler(hexEncodedKey string, h GCFInteractionHandler) GCF
 				// TODO: err handling
 			}
 
+            log.Printf("Ping/Pong! response: %v", rep)
+
+            w.Header().Add("Content-Type", "application/json")
 			w.Write(rep)
 			return
 		}
@@ -70,6 +73,9 @@ func CreateInteractionHandler(hexEncodedKey string, h GCFInteractionHandler) GCF
 			// TODO: err handling
 		}
 
+        log.Printf("Response: %v", rep)
+
+        w.Header().Add("Content-Type", "application/json")
 		w.Write(rep)
 	}
 }
