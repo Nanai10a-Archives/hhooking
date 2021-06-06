@@ -16,15 +16,16 @@ func CreateInteractionHandler(hexEncodedKey string, h GCFInteractionHandler) GCF
 	decodeKey, err := hex.DecodeString(hexEncodedKey)
 	if err != nil {
 		// TODO: err handling
+		panic("failed decode key.")
 	}
 	key := ed25519.PublicKey(decodeKey)
 
 	return func(w http.ResponseWriter, r *http.Request) {
-        log.Printf("received: %v", r)
+		log.Printf("received: %v", r)
 
 		if !SignatureVerify(r, key) {
 			http.Error(w, "Signature checking failed.", http.StatusUnauthorized)
-            log.Printf("failed signature verify\nkey: %v\nHeaders: %v\n", key, r.Header)
+			log.Printf("failed signature verify\nkey: %v\nHeaders: %v\n", key, r.Header)
 			return
 		}
 
@@ -38,6 +39,7 @@ func CreateInteractionHandler(hexEncodedKey string, h GCFInteractionHandler) GCF
 			resSize, err := r.Body.Read(v)
 			if err != nil {
 				// TODO: err handling
+				panic("failed body reading.")
 			}
 
 			buf = append(buf, v...)
@@ -47,8 +49,12 @@ func CreateInteractionHandler(hexEncodedKey string, h GCFInteractionHandler) GCF
 			}
 		}
 
-		jsoniter.ConfigCompatibleWithStandardLibrary.Unmarshal(buf, &body)
-        log.Printf("raw Body :%v\nparsed Body: %v\n", buf, body)
+		err := jsoniter.ConfigCompatibleWithStandardLibrary.Unmarshal(buf, &body)
+		if err != nil {
+			// TODO: err handling
+			panic("failed unmarshal body.")
+		}
+		log.Printf("raw Body :%v\nparsed Body: %v\n", buf, body)
 
 		if body.Type == ItPing {
 			rep, err := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(
@@ -58,11 +64,12 @@ func CreateInteractionHandler(hexEncodedKey string, h GCFInteractionHandler) GCF
 			)
 			if err != nil {
 				// TODO: err handling
+				panic("failed marshal reply.")
 			}
 
-            log.Printf("Ping/Pong! response: %v\n", rep)
+			log.Printf("Ping/Pong! response: %v\n", rep)
 
-            w.Header().Add("Content-Type", "application/json")
+			w.Header().Add("Content-Type", "application/json")
 			w.Write(rep)
 			return
 		}
@@ -72,11 +79,12 @@ func CreateInteractionHandler(hexEncodedKey string, h GCFInteractionHandler) GCF
 		rep, err := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(repStruct)
 		if err != nil {
 			// TODO: err handling
+			panic("failed marshal reply.")
 		}
 
-        log.Printf("Response: %v\n", rep)
+		log.Printf("Response: %v\n", rep)
 
-        w.Header().Add("Content-Type", "application/json")
+		w.Header().Add("Content-Type", "application/json")
 		w.Write(rep)
 	}
 }
