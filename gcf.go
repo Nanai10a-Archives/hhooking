@@ -24,7 +24,7 @@ func CreateInteractionHandler(hexEncodedKey string, h GCFInteractionHandler) GCF
 
 		if !SignatureVerify(r, key) {
 			http.Error(w, "Signature checking failed.", http.StatusUnauthorized)
-            log.Printf("failed signature verify\nkey: %v\nHeaders: %v", key, r.Header)
+            log.Printf("failed signature verify\nkey: %v\nHeaders: %v\n", key, r.Header)
 			return
 		}
 
@@ -48,6 +48,7 @@ func CreateInteractionHandler(hexEncodedKey string, h GCFInteractionHandler) GCF
 		}
 
 		jsoniter.ConfigCompatibleWithStandardLibrary.Unmarshal(buf, &body)
+        log.Printf("raw Body :%v\nparsed Body: %v\n", buf, body)
 
 		if body.Type == ItPing {
 			rep, err := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(
@@ -59,7 +60,7 @@ func CreateInteractionHandler(hexEncodedKey string, h GCFInteractionHandler) GCF
 				// TODO: err handling
 			}
 
-            log.Printf("Ping/Pong! response: %v", rep)
+            log.Printf("Ping/Pong! response: %v\n", rep)
 
             w.Header().Add("Content-Type", "application/json")
 			w.Write(rep)
@@ -73,7 +74,7 @@ func CreateInteractionHandler(hexEncodedKey string, h GCFInteractionHandler) GCF
 			// TODO: err handling
 		}
 
-        log.Printf("Response: %v", rep)
+        log.Printf("Response: %v\n", rep)
 
         w.Header().Add("Content-Type", "application/json")
 		w.Write(rep)
