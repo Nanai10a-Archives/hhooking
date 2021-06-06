@@ -3,7 +3,7 @@ package hhooking
 import (
 	"crypto/ed25519"
 	"encoding/hex"
-	"fmt"
+	"log"
 	"net/http"
 
 	jsoniter "github.com/json-iterator/go"
@@ -20,11 +20,11 @@ func CreateInteractionHandler(hexEncodedKey string, h GCFInteractionHandler) GCF
 	key := ed25519.PublicKey(decodeKey)
 
 	return func(w http.ResponseWriter, r *http.Request) {
-        fmt.Printf("received: %v", r)
+        log.Printf("received: %v", r)
 
 		if !SignatureVerify(r, key) {
 			http.Error(w, "Signature checking failed.", http.StatusUnauthorized)
-            fmt.Printf("failed signature verify\nkey: %v\nHeaders: %v", key, r.Header)
+            log.Printf("failed signature verify\nkey: %v\nHeaders: %v", key, r.Header)
 			return
 		}
 
