@@ -1,6 +1,6 @@
 package hhooking
 
-type SnowFlake uint64
+type SnowFlake string
 
 // TODO: 汎用structの未定義によりOmitされます
 
@@ -100,8 +100,8 @@ type Interaction struct {
 	ApplicationId SnowFlake                          `json:"application_id"`
 	Type          InteractionType                    `json:"type"`
 	Data          *ApplicationCommandInteractionData `json:"data,omitempty"`
-	GuildId       SnowFlake                          `json:"guild_id"`
-	ChannelId     SnowFlake                          `json:"channel_id"`
+	GuildId       *SnowFlake                         `json:"guild_id"`
+	ChannelId     *SnowFlake                         `json:"channel_id"`
 	// Member *Member `json:"member,omitempty"`
 	// User *User `json:"user,omitempty"`
 	Token   string `json:"token"`
